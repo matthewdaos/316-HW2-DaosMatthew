@@ -19,7 +19,7 @@ body {
 
 #root {
   background-color: var(--swatch-primary);
-  font-family: serif;
+  font-family: "Oswald", sans-serif;
   position: absolute;
   width: 80%;
   left: 10%;
@@ -47,7 +47,7 @@ body {
   background-image: linear-gradient(to bottom,         
   #b8b808, #636723);
   color: white;
-  font-size: 54pt;
+  font-size: 40pt;
   border-color: black;
   border-width: 2px;
   border-style: solid;
