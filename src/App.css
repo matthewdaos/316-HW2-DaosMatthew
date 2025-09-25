@@ -191,6 +191,18 @@ body {
   color:red;
 }
 
+.song-card .card-button.song-card-trash {
+  margin-left: auto;
+  border: 0;
+  line-height: 1;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.song-card .card-button.song-card-trash:hover {
+  background: var(--swatch-primary);
+}
+
 input {
   font-size:20pt;
 }
