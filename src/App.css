@@ -117,13 +117,13 @@ body {
 
 .unselected-playlist-card:hover {
   cursor: pointer;
-  background-color: var(--swatch-contrast);
-  color:white;
+  background-color: black;
+  color: var(--swatch-accent);
 }
 
 .selected-playlist-card {
   background-color: var(--swatch-accent);
-  color: white;
+  color: black;
 }
 
 .unselected-playlist-card {
@@ -151,8 +151,46 @@ body {
 .song-card, .song-card-dragged-to { 
   display:flex;
   align-items: center;
-  font-size: 24pt;
-  height:20%;
+  gap: 12px;
+  font-size: 20pt;
+  padding: 14px 16px;
+  margin: 10px 12px;
+  border-radius: 24px;
+  background-color: var(--swatch-complement);
+  transition: background-color .15s var(--bounceEasing), box-shadow .15s var(--bounceEasing), transform .06s ease-in-out;
+}
+
+.song-card:hover {
+  background-color: var(--swatch-contrast);
+  cursor: grab;
+}
+
+.song-card-title a {
+  color: #b88320;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+.song-card:hover .song-card-title a {
+  color: lightgreen;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+.song-card:hover .song-card-title a:hover {
+  color: pink;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+.song-card:hover .song-card-number, 
+.song-card:hover .song-card-year, 
+.song-card:hover .song-card-by {
+  color:white;
+}
+
+.song-card-artist {
+  color:red;
 }
 
 input {
@@ -186,12 +224,13 @@ input {
 
 .modal-root {
   position: relative;
-  max-width: 1200vw;
-  max-height: 600vh;
+  max-width: 500px;
+  width: 90%;
+  max-height: 70vh;
   overflow: visible;
   display: flex;
   flex-direction: column;
-  background: var(--swatch-complement);
+  background: var(--swatch-complement, #e1e4cb);
   cursor: default;
   border-width: 2px;
   border-color: black;
