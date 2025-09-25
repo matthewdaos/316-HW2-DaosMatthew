@@ -10,7 +10,7 @@ export default class SongCard extends React.Component {
         }
     }
     handleDragStart = (event) => {
-        event.dataTransfer.setData("song", event.target.id);
+        event.dataTransfer.setData("song", event.currentTarget.id);
         this.setState(prevState => ({
             isDragging: true,
             draggedTo: prevState.draggedTo
@@ -40,8 +40,8 @@ export default class SongCard extends React.Component {
     handleDrop = (event) => {
         event.preventDefault();
         let target = event.target;
-        let targetId = target.id;
-        targetId = targetId.substring(target.id.indexOf("-") + 1);
+        let targetRaw = event.currentTarget.id;
+        let targetId = targetRaw.substring(targetRaw.indexOf("-") + 1);
         let sourceId = event.dataTransfer.getData("song");
         sourceId = sourceId.substring(sourceId.indexOf("-") + 1);
         
@@ -52,6 +52,12 @@ export default class SongCard extends React.Component {
 
         // ASK THE MODEL TO MOVE THE DATA
         this.props.moveCallback(sourceId, targetId);
+    }
+
+    handleTitleCheck = (e, url) => {
+        e.stopPropagation();
+        if(this.state.isDragging) return;
+        window.open(url, "_blank", "noopener,noreferrer");
     }
 
     getItemNum = () => {
@@ -71,6 +77,7 @@ export default class SongCard extends React.Component {
         if (song.year !== undefined && song.year !== null && String(song.year).trim() !== "") {
             yearText = " (" + song.year + ") ";
         }
+        let youtubeUrl = "https://youtube.com/watch?v=" + song.youTubeId
         return (
             <div
                 id={'song-' + num}
@@ -84,13 +91,27 @@ export default class SongCard extends React.Component {
             >
                 <span className="song-card-number">{num}.</span>
                 <span className="song-card-title">
-                    <a href={"https://youtube.com/watch?v=" + song.youTubeId} target="1" rel="noreferrer">
-                        {song.title}
+                    <a href={youtubeUrl} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        draggable="false" 
+                        onDragStart={(e) => e.preventDefault()} 
+                        onMouseDown={(e => e.stopPropagation())} 
+                        onClick={(e => this.handleTitleCheck(e, youtubeUrl))}>
+                            {song.title}
                     </a>
                 </span>
                 <span className="song-card-year">{yearText}</span>
                 <span className="song-card-by"> by </span>{" "}
                 <span className="song-card-artist">{song.artist}</span>
+
+                <input 
+                    type="button"
+                    id={"delete-song-" + num}
+                    className="card-button song-card-trash"
+                    onMouseDown={(e) => e.stopPropagation()}
+                    value={"🗑"}
+                />
             </div>
         )
     }
