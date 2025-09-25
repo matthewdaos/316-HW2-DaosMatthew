@@ -66,6 +66,11 @@ export default class SongCard extends React.Component {
         if (this.state.draggedTo) {
             itemClass = "song-card-dragged-to";
         }
+
+        let yearText = ""
+        if (song.year !== undefined && song.year !== null && String(song.year).trim() !== "") {
+            yearText = " (" + song.year + ") ";
+        }
         return (
             <div
                 id={'song-' + num}
@@ -77,7 +82,13 @@ export default class SongCard extends React.Component {
                 onDrop={this.handleDrop}
                 draggable="true"
             >
-                {song.title} by {song.artist}
+                <span className="song-number">{num}.</span>
+                <a className="song-card-title" href={"https://youtube.com/watch?v=" + song.youTubeId} target="1" rel="noreferrer">
+                    {song.title}
+                </a>
+                <span className="song-card-year">{yearText}</span>
+                <span className="song-card-by"> by </span>{" "}
+                <span className="song-card-artist">{song.artist}</span>
             </div>
         )
     }
