@@ -152,7 +152,7 @@ body {
   display:flex;
   align-items: center;
   gap: 12px;
-  font-size: 20pt;
+  font-size: 18pt;
   padding: 14px 16px;
   margin: 10px 12px;
   border-radius: 24px;
@@ -179,8 +179,6 @@ body {
 
 .song-card:hover .song-card-title a:hover {
   color: pink;
-  text-decoration: none;
-  border-bottom: none;
 }
 
 .song-card:hover .song-card-number, 
@@ -224,9 +222,9 @@ input {
 
 .modal-root {
   position: relative;
-  max-width: 500px;
+  max-width: 1400vh;
   width: 90%;
-  max-height: 70vh;
+  max-height: 600vh;
   overflow: visible;
   display: flex;
   flex-direction: column;
