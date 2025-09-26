@@ -406,3 +406,10 @@ span {
     transform: rotate(0deg);
   }
 }
+
+button:disabled,
+input[type="button"]:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: not-allowed;
+}
