@@ -38,7 +38,10 @@ class App extends React.Component {
         this.state = {
             listKeyPairMarkedForDeletion : null,
             currentList : null,
-            sessionData : loadedSessionData
+            sessionData : loadedSessionData,
+
+            isNamingPlaylist : false,
+            editSongIndex : null
         }
     }
     sortKeyNamePairsByName = (keyNamePairs) => {
@@ -334,6 +337,13 @@ class App extends React.Component {
         modal.classList.remove("is-visible");
     }
 
+    setIsNamingPlaylist(v) {
+        this.setState((prevState) => ({
+            ...prev,
+            isNamingPlaylist : !!v
+        }))
+    }
+
     componentDidMount() {
         window.addEventListener("keydown", this.handleKey);
     }
@@ -366,15 +376,23 @@ class App extends React.Component {
         }
     }
     render() {
-        let canAddSong = this.state.currentList !== null;
-        let canUndo = this.tps.hasTransactionToUndo();
-        let canRedo = this.tps.hasTransactionToDo();
-        let canClose = this.state.currentList !== null;
+        let modalOpen = !!document.querySelector("#delete-list-modal.is-visible");
+        let editingSong = this.state.editSongIndex !== null;
+        let nameList = this.state.isNamingPlaylist;
+
+        let lockToolbar = modalOpen || editingSong || nameList;
+
+        let canAddSong = !lockToolbar && this.state.currentList !== null;
+        let canUndo = !lockToolbar && this.tps.hasTransactionToUndo() && this.state.currentList !== null;
+        let canRedo = !lockToolbar && this.tps.hasTransactionToDo() && this.state.currentList !== null;
+        let canClose = !lockToolbar && this.state.currentList !== null;
         return (
             <div id="root">
                 <Banner />
                 <SidebarHeading
                     createNewListCallback={this.createNewList}
+                    setIsNamingPlaylist={this.setIsNamingPlaylist}
+                    canAddList={!lockToolbar}
                 />
                 <SidebarList
                     currentList={this.state.currentList}
@@ -382,6 +400,7 @@ class App extends React.Component {
                     deleteListCallback={this.markListForDeletion}
                     loadListCallback={this.loadList}
                     renameListCallback={this.renameList}
+                    setIsNamingPlaylist={this.setIsNamingPlaylist}
                 />
                 <EditToolbar
                     canAddSong={canAddSong}
