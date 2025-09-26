@@ -53,6 +53,18 @@ export default class SongCard extends React.Component {
         // ASK THE MODEL TO MOVE THE DATA
         this.props.moveCallback(sourceId, targetId);
     }
+    handleDuplicate = () => {
+        let num = this.getItemNum;
+        let i = Number(num) - 1;
+        let { duplicateSongCallback } = this.props;
+        duplicateSongCallback && duplicateSongCallback(i)
+    }
+    handleDelete = () => {
+        let num = this.getItemNum;
+        let i = Number(num) - 1;
+        let { removeSongCallback } = this.props;
+        removeSongCallback && removeSongCallback(i);
+    }
 
     handleTitleCheck = (e, url) => {
         e.stopPropagation();
@@ -65,7 +77,7 @@ export default class SongCard extends React.Component {
     }
 
     render() {
-        const { song, removeSongCallback } = this.props;
+        const { song, removeSongCallback, duplicateSongCallback } = this.props;
         let num = this.getItemNum();
         console.log("num: " + num);
         let itemClass = "song-card";
@@ -105,6 +117,14 @@ export default class SongCard extends React.Component {
                 <span className="song-card-by"> by </span>{" "}
                 <span className="song-card-artist">{song.artist}</span>
 
+                <input 
+                    type="button"
+                    id={"duplicate-song-" + num}
+                    className="card-button song-card-duplicate"
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onClick={() => duplicateSongCallback(Number(num) - 1)}
+                    value={"⎘"}
+                />
                 <input 
                     type="button"
                     id={"delete-song-" + num}
