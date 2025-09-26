@@ -53,19 +53,7 @@ export default class SongCard extends React.Component {
         // ASK THE MODEL TO MOVE THE DATA
         this.props.moveCallback(sourceId, targetId);
     }
-    handleDuplicate = () => {
-        let num = this.getItemNum;
-        let i = Number(num) - 1;
-        let { duplicateSongCallback } = this.props;
-        duplicateSongCallback && duplicateSongCallback(i)
-    }
-    handleDelete = () => {
-        let num = this.getItemNum;
-        let i = Number(num) - 1;
-        let { removeSongCallback } = this.props;
-        removeSongCallback && removeSongCallback(i);
-    }
-
+    
     handleTitleCheck = (e, url) => {
         e.stopPropagation();
         if(this.state.isDragging) return;
