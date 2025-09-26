@@ -274,6 +274,38 @@ class App extends React.Component {
         let modal = document.getElementById("delete-list-modal");
         modal.classList.remove("is-visible");
     }
+
+    componentDidMount() {
+        window.addEventListener("keydown", this.handleKey);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("keydown", this.handleKey);
+    }
+
+    handleKey = (e) => {
+        let tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+        let typing = tag === "input" || tag === "textarea" || e.target.isContentEditable;
+        let deleteModalOpen = !!document.querySelector("#delete-list-modal.is-visible");
+        if (typing || deleteModalOpen) return;
+
+        let isMac = navigator.platform.toUpperCase().includes("MAC");
+        let mod = isMac ? e.metaKey : e.ctrlKey;
+        let key = e.key.toLowerCase();
+
+        // UNDO IMPLEMENTATION
+        if(mod && key === "z"){
+            e.preventDefault();
+            this.undo();
+            return;
+        }
+
+        // REDO IMPLEMENTATION  
+        if (mod && key === "y") {
+            e.preventDefault();
+            this.redo(); 
+        }
+    }
     render() {
         let canAddSong = this.state.currentList !== null;
         let canUndo = this.tps.hasTransactionToUndo();
