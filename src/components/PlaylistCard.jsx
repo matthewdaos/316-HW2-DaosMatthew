@@ -58,10 +58,16 @@ export default class PlaylistCard extends React.Component {
                     id={"playlist-" + keyNamePair.name}
                     className='playlist-card'
                     type='text'
-                    onKeyPress={this.handleKeyPress}
-                    onBlur={this.handleBlur}
+                    onKeyDown={this.handleKeyPress}
+                    onBlur={() => {
+                        this.handleBlur();
+                        setIsNamingPlaylist && setIsNamingPlaylist(false);
+                    }}
                     onChange={this.handleUpdate}
                     defaultValue={keyNamePair.name}
+
+                    onFocus={() => setIsNamingPlaylist && setIsNamingPlaylist(true)}
+                    autoFocus
                 />)
         }
         else {
