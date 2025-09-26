@@ -65,7 +65,7 @@ export default class SongCard extends React.Component {
     }
 
     render() {
-        const { song } = this.props;
+        const { song, removeSongCallback } = this.props;
         let num = this.getItemNum();
         console.log("num: " + num);
         let itemClass = "song-card";
@@ -110,7 +110,7 @@ export default class SongCard extends React.Component {
                     id={"delete-song-" + num}
                     className="card-button song-card-trash"
                     onMouseDown={(e) => e.stopPropagation()}
-                    onClick={() => this.props.removeSongCallback(Number(num) - 1)}
+                    onClick={() => removeSongCallback(Number(num) - 1)}
                     value={"🗑"}
                 />
             </div>
