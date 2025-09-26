@@ -191,15 +191,20 @@ body {
   color:red;
 }
 
-.song-card .card-button.song-card-trash {
+.song-card .card-button.song-card-duplicate {
   margin-left: auto;
   border: 0;
-  line-height: 1;
-  padding: 6px 8px;
   cursor: pointer;
 }
 
-.song-card .card-button.song-card-trash:hover {
+.song-card .card-button.song-card-trash {
+  margin-left: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.song-card .card-button.song-card-trash:hover,
+.song-card .card-button.song-card-duplicate:hover {
   background: var(--swatch-primary);
 }
 
