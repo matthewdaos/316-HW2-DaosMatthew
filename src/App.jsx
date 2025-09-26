@@ -8,6 +8,8 @@ import { jsTPS } from 'jstps';
 // OUR TRANSACTIONS
 import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
 import AddSong_Transaction from './transactions/AddSong_Transaction.js';
+import DuplicateSong_Transaction from './transactions/DuplicateSong_Transaction.js';
+import DuplicateList_Transaction from './transactions/DuplicateList_Transaction.js';
 import RemoveSong_Transaction from './transactions/RemoveSong_Transaction.js';
 
 // THESE REACT COMPONENTS ARE MODALS
@@ -91,6 +93,44 @@ class App extends React.Component {
             // SO IS STORING OUR SESSION DATA
             this.db.mutationUpdateSessionData(this.state.sessionData);
         });
+    }
+
+    createDuplicateList = (srcKey) => {
+        let og = this.db.queryGetList(srcKey);
+
+        let newKey = this.state.sessionData.nextKey;
+        let newName = og.name + " (Copy)";
+        let newList = {
+            key: newKey,
+            name: newName,
+            songs: og.songs.map(s => ({ ...s }))
+        };
+
+        let newKeyNamePair = {
+            key: newKey,
+            name: newName
+        };
+
+        let updatedPairs = [...this.state.sessionData.keyNamePairs, newKeyNamePair];
+        this.sortKeyNamePairsByName(updatedPairs);
+
+        this.setState(prevState => ({
+            ...prevState,
+            sessionData: {
+                nextKey: prevState.sessionData.nextKey + 1,
+                counter: prevState.sessionData.counter + 1,
+                keyNamePairs: updatedPairs
+            }
+        }), () => {
+            // PUTTING THIS NEW LIST IN PERMANENT STORAGE
+            // IS AN AFTER EFFECT
+            this.db.mutationCreateList(newList);
+
+            // SO IS STORING OUR SESSION DATA
+            this.db.mutationUpdateSessionData(this.state.sessionData);
+        });
+
+        return newKey;
     }
     // THIS FUNCTION BEGINS THE PROCESS OF DELETING A LIST.
     deleteList = (key) => {
@@ -287,6 +327,17 @@ class App extends React.Component {
         let transaction = new AddSong_Transaction(this, index);
         this.tps.processTransaction(transaction);
     }
+    // THIS FUNCTION ADDS A DuplicateList_Transaction TO THE TRANSACTION STACK
+    addDuplicateListTransaction = (key) => {
+        if(!key && key !== 0) return;
+        let transaction = new DuplicateList_Transaction(this, key);
+        this.tps.processTransaction(transaction);
+    }
+    // THIS FUNCTION ADDS A DuplicateSong_Transaction TO THE TRANSACTION STACK
+    addDuplicateSongTransaction = (index) => {
+        let transaction = new DuplicateSong_Transaction(this, index);
+        this.tps.processTransaction(transaction);
+    }
     // THIS FUNCTION ADDS A MoveSong_Transaction TO THE TRANSACTION STACK
     addMoveSongTransaction = (start, end) => {
         let transaction = new MoveSong_Transaction(this, start, end);
@@ -401,6 +452,7 @@ class App extends React.Component {
                     loadListCallback={this.loadList}
                     renameListCallback={this.renameList}
                     setIsNamingPlaylist={this.setIsNamingPlaylist}
+                    duplicateListCallback={(key) => this.addDuplicateListTransaction(key)}
                 />
                 <EditToolbar
                     canAddSong={canAddSong}
@@ -415,7 +467,9 @@ class App extends React.Component {
                 <SongCards
                     currentList={this.state.currentList}
                     moveSongCallback={this.addMoveSongTransaction}
-                    removeSongCallback={(i) => this.addRemoveSongTransaction(i)} />
+                    removeSongCallback={(i) => this.addRemoveSongTransaction(i)} 
+                    duplicateSongCallback={(i) => this.addDuplicateSongTransaction(i)}
+                />
                 <Statusbar 
                     currentList={this.state.currentList} />
                 <DeleteListModal
