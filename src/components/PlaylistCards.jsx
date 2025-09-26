@@ -8,7 +8,8 @@ export default class PlaylistCards extends React.Component {
                 deleteListCallback, 
                 loadListCallback,
                 renameListCallback,
-                setIsNamingPlaylist } = this.props;
+                setIsNamingPlaylist,
+                duplicateListCallback } = this.props;
         return (
             <div id="playlist-cards">
                 {
@@ -21,6 +22,7 @@ export default class PlaylistCards extends React.Component {
                             loadListCallback={loadListCallback}
                             renameListCallback={renameListCallback}
                             setIsNamingPlaylist={setIsNamingPlaylist}
+                            duplicateListCallback={duplicateListCallback}
                         />
                     ))
                 }
