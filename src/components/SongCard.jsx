@@ -110,6 +110,7 @@ export default class SongCard extends React.Component {
                     id={"delete-song-" + num}
                     className="card-button song-card-trash"
                     onMouseDown={(e) => e.stopPropagation()}
+                    onClick={() => this.props.removeSongCallback(Number(num) - 1)}
                     value={"🗑"}
                 />
             </div>
