@@ -10,6 +10,7 @@ import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
 import AddSong_Transaction from './transactions/AddSong_Transaction.js';
 import DuplicateSong_Transaction from './transactions/DuplicateSong_Transaction.js';
 import DuplicateList_Transaction from './transactions/DuplicateList_Transaction.js';
+import EditSong_Transaction from './transactions/EditSong_Transaction.js';
 import RemoveSong_Transaction from './transactions/RemoveSong_Transaction.js';
 
 // THESE REACT COMPONENTS ARE MODALS
@@ -22,6 +23,7 @@ import SidebarHeading from './components/SidebarHeading.jsx';
 import SidebarList from './components/PlaylistCards.jsx';
 import SongCards from './components/SongCards.jsx';
 import Statusbar from './components/Statusbar.jsx';
+import EditSongModal from './components/EditSongModal.jsx';
 
 class App extends React.Component {
     constructor(props) {
@@ -297,6 +299,27 @@ class App extends React.Component {
         let snap = { ...list.songs[index]};
         return snap;
     }
+
+    openEditSongModal(i) {
+        this.setState({ editSongIndex: i }, () => {
+            let m = document.getElementById("edit-song-modal");
+            if(m) m.classList.add("is-visible")
+        });
+    }
+
+    closeEditSongModal() {
+        let m = document.getElementById("edit-song-modal");
+        if(m) m.classList.remove("is-visible");
+        this.setState({ editSongIndex: null });
+    }
+
+    editSongAtIndex(index, value) {
+        let list = this.state.currentList;
+        if(index < 0 || index >= list.songs.length) return;
+        let updated = { ...list.songs[index], ...value};
+        list.songs[index] = updated;
+        this.setStateWithUpdatedList(list);
+    }
     // THIS FUNCTION MOVES A SONG IN THE CURRENT LIST FROM
     // start TO end AND ADJUSTS ALL OTHER ITEMS ACCORDINGLY
     moveSong(start, end) {
@@ -337,6 +360,12 @@ class App extends React.Component {
     addDuplicateSongTransaction = (index) => {
         let transaction = new DuplicateSong_Transaction(this, index);
         this.tps.processTransaction(transaction);
+    }
+
+    addEditSongTransaction = (updatedValue) => {
+        let transaction = new EditSong_Transaction(this, this.state.editSongIndex, updatedValue);
+        this.tps.processTransaction(transaction);
+        this.closeEditSongModal();
     }
     // THIS FUNCTION ADDS A MoveSong_Transaction TO THE TRANSACTION STACK
     addMoveSongTransaction = (start, end) => {
@@ -469,6 +498,7 @@ class App extends React.Component {
                     moveSongCallback={this.addMoveSongTransaction}
                     removeSongCallback={(i) => this.addRemoveSongTransaction(i)} 
                     duplicateSongCallback={(i) => this.addDuplicateSongTransaction(i)}
+                    openEditSongModal={(i) => this.openEditSongModal(i)}
                 />
                 <Statusbar 
                     currentList={this.state.currentList} />
@@ -476,6 +506,12 @@ class App extends React.Component {
                     listKeyPair={this.state.listKeyPairMarkedForDeletion}
                     hideDeleteListModalCallback={this.hideDeleteListModal}
                     deleteListCallback={this.deleteMarkedList}
+                />
+                <EditSongModal
+                    isVisible={this.state.editSongIndex != null}
+                    song={ this.state.editSongIndex != null ? this.state.currentList.songs[this.state.editSongIndex] : null}
+                    onConfirm={this.addEditSongTransaction}
+                    onCancel={() => this.closeEditSongModal()}
                 />
             </div>
         );
