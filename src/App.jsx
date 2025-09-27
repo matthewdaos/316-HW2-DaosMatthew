@@ -300,6 +300,7 @@ class App extends React.Component {
         return snap;
     }
 
+    // THIS FUNCTION MAKES THE EDIT SONG MODAL VISIBLE
     openEditSongModal(i) {
         this.setState({ editSongIndex: i }, () => {
             let m = document.getElementById("edit-song-modal");
@@ -307,6 +308,7 @@ class App extends React.Component {
         });
     }
 
+    // THIS FUNCTION MAKES THE EDIT SONG MODAL VISIBLE
     closeEditSongModal() {
         let m = document.getElementById("edit-song-modal");
         if(m) m.classList.remove("is-visible");
@@ -438,19 +440,19 @@ class App extends React.Component {
         let deleteModalOpen = !!document.querySelector("#delete-list-modal.is-visible");
         if (typing || deleteModalOpen) return;
 
-        let isMac = navigator.platform.toUpperCase().includes("MAC");
+        let isMac = navigator.platform && navigator.platform.toUpperCase().includes("MAC");
         let mod = isMac ? e.metaKey : e.ctrlKey;
         let key = e.key.toLowerCase();
 
         // UNDO IMPLEMENTATION
-        if(mod && key === "z"){
+        if(mod && key === "z" && !e.shiftKey){
             e.preventDefault();
             this.undo();
             return;
         }
 
         // REDO IMPLEMENTATION  
-        if (mod && key === "y") {
+        if (mod && key === "y" || (isMac && mod && e.shiftKey)) {
             e.preventDefault();
             this.redo(); 
         }
