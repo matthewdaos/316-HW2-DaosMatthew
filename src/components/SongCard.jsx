@@ -65,7 +65,7 @@ export default class SongCard extends React.Component {
     }
 
     render() {
-        const { song, removeSongCallback, duplicateSongCallback } = this.props;
+        const { song, onEditRequest, removeSongCallback, duplicateSongCallback } = this.props;
         let num = this.getItemNum();
         console.log("num: " + num);
         let itemClass = "song-card";
@@ -87,6 +87,7 @@ export default class SongCard extends React.Component {
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
+                onDoubleClick={() => onEditRequest && onEditRequest(Number(num) - 1)}
                 draggable="true"
             >
                 <span className="song-card-number">{num}.</span>
