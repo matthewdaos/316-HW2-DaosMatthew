@@ -452,7 +452,7 @@ class App extends React.Component {
         }
 
         // REDO IMPLEMENTATION  
-        if (mod && key === "y" || (isMac && mod && e.shiftKey)) {
+        if (mod && key === "y" || (isMac && mod && e.shiftKey && key === "z")) {
             e.preventDefault();
             this.redo(); 
         }
